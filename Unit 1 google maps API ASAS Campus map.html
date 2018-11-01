@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,
+    initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <title>All Saints Anglican School Campus Map</title>
+    <style media="screen">
+      #map{
+        height:800px;
+        width:100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>All Saints Anglican School Campus <map>
+    </map></h1>
+    <div id="map"></div>
+    <script type="text/javascript">
+      function initMap() {
+        var options = {
+          // Map options
+          zoom: 18,
+          center:{lat:-28.06065, lng:153.361394}
+        }
+
+        // New map
+        var map = new google.maps.Map(document.getElementById('map'), options);
+
+
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMCqNjfxQgIvwtM50FnUAL_EKD2HpR7dQ&callback=initMap"
+        async defer></script>
+  </body>
+</html>
