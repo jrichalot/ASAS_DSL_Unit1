@@ -45,18 +45,28 @@
         });
         */
 
-        addMarker({lat:-28.060662, lng:153.361772});
-        addMarker({lat:-28.061539,lng:153.362896});
-        addMarker({lat:-28.061944,lng:153.363483});
+        addMarker({
+          coords:{lat:-28.060662, lng:153.361772},
+          iconImage:'https://www.asas.qld.edu.au/img/favicon.ico'
+        });
+        addMarker({coords:{lat:-28.061539,lng:153.362896}});
+        addMarker({coords:{lat:-28.061944,lng:153.363483}});
 
         // Add marker funtion
-        function addMarker(coords){
+        function addMarker(props){
           var marker = new google.maps.Marker({
-            position:coords,
+            position:props.coords,
             map:map,
-            icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png'
+            //icon:props.iconImage
+            //icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png'
             //icon:'https://www.asas.qld.edu.au/img/favicon.ico'
           });
+
+          //check for custom icon
+          if(props.iconImage){
+            // set icon Image
+            marker.setIcon(props.iconImage);
+          }
 
         }
 
