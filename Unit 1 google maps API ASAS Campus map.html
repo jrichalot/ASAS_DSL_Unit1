@@ -31,9 +31,18 @@
         //Add marker
         var marker = new google.maps.Marker({
           position:{lat:-28.060662, lng:153.361772},
-          map:map 
+          map:map,
+          icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png'
+          //icon:'https://www.asas.qld.edu.au/img/favicon.ico'
         });
 
+        var infoWindow = new google.maps.InfoWindow({
+          content:'<h4>All Saints Chapel</h4>'
+        });
+
+        marker.addListener('click', function(){
+          infoWindow.open(map, marker);
+        });
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMCqNjfxQgIvwtM50FnUAL_EKD2HpR7dQ&callback=initMap"
