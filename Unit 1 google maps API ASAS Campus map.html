@@ -27,7 +27,7 @@
 
         // New map
         var map = new google.maps.Map(document.getElementById('map'), options);
-
+/*
         //Add marker
         var marker = new google.maps.Marker({
           position:{lat:-28.060662, lng:153.361772},
@@ -43,6 +43,23 @@
         marker.addListener('click', function(){
           infoWindow.open(map, marker);
         });
+        */
+
+        addMarker({lat:-28.060662, lng:153.361772});
+        addMarker({lat:-28.061539,lng:153.362896});
+        addMarker({lat:-28.061944,lng:153.363483});
+
+        // Add marker funtion
+        function addMarker(coords){
+          var marker = new google.maps.Marker({
+            position:coords,
+            map:map,
+            icon: 'http://maps.google.com/mapfiles/ms/icons/blue.png'
+            //icon:'https://www.asas.qld.edu.au/img/favicon.ico'
+          });
+
+        }
+
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMCqNjfxQgIvwtM50FnUAL_EKD2HpR7dQ&callback=initMap"
