@@ -45,13 +45,30 @@
         });
         */
 
-        addMarker({
-          coords:{lat:-28.060662, lng:153.361772},
-          iconImage:'https://www.asas.qld.edu.au/img/favicon.ico',
-          content:'<h4>All Saints Chapel</h4>'
-        });
-        addMarker({coords:{lat:-28.061539,lng:153.362896}});
-        addMarker({coords:{lat:-28.061944,lng:153.363483}});
+        // Add array of markers
+        var markers = [
+          {
+            coords:{lat:-28.060662, lng:153.361772},
+            iconImage:'https://www.asas.qld.edu.au/img/favicon.ico',
+            content:'<h4>All Saints Chapel</h4>'
+          },
+          {
+            coords:{lat:-28.061539,lng:153.362896},
+            iconImage:'https://www.asas.qld.edu.au/img/favicon.ico',
+            content:'<h4>CSI - Centre for Scientific Investigations</h4><p>Office:<ul><li>Ms C. Cuskelly</li><li>Ms D. Edwards</li><li>Ms E. Merrin</li><li>Mr M. David-Tooze</li></ul>'
+          },
+          {
+            coords:{lat:-28.061944,lng:153.363483},
+            iconImage:'https://www.asas.qld.edu.au/img/favicon.ico',
+            content:'<h4>HPE - Health and Physical Education Centre</h4><p>Office:<ul><li>Mr F. Leslie</li><li>Ms D. Cairns</li></ul>'
+          }
+        ];
+
+        // Loop through markers
+        for(var i = 0;i < markers.length; i++){
+          addMarker(markers[i]);
+        }
+
 
         // Add marker funtion
         function addMarker(props){
