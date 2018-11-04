@@ -47,7 +47,8 @@
 
         addMarker({
           coords:{lat:-28.060662, lng:153.361772},
-          iconImage:'https://www.asas.qld.edu.au/img/favicon.ico'
+          iconImage:'https://www.asas.qld.edu.au/img/favicon.ico',
+          content:'<h4>All Saints Chapel</h4>'
         });
         addMarker({coords:{lat:-28.061539,lng:153.362896}});
         addMarker({coords:{lat:-28.061944,lng:153.363483}});
@@ -66,6 +67,17 @@
           if(props.iconImage){
             // set icon Image
             marker.setIcon(props.iconImage);
+          }
+
+          // check content for infoWindow
+          if(props.content){
+            var infoWindow = new google.maps.InfoWindow({
+              content:props.content
+            });
+
+            marker.addListener('click', function(){
+              infoWindow.open(map, marker);
+            });
           }
 
         }
