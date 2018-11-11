@@ -35,7 +35,7 @@ if sum(computerDice) <= 12 and sum(playerDice) <= 12:
     play_round = 0
 
     # a round starts when either of the players decide to roll a die 
-     while play_round <2:
+    while play_round <2:
         
         want_to_play = input("Would you like to roll a die? y/n")
 
