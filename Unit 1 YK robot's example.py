@@ -26,9 +26,8 @@ class Person:
     def standUp(self):
         self.isSitting = False
 
-p1 = Person("Alice", "aggressive", "False",r2)
-p1 = Person("Becky", "talkative", "True", r1)
+p1 = Person("Alice", "aggressive", False,r2)
+p2 = Person("Becky", "talkative", True, r1)
 
 p1.robotOwned.introduce_self()
 print(p1.robotOwned.name)
-
