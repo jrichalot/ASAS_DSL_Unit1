@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html,
+        body {
+            font-family: Arial, sans-serif;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+           }
+        #map {
+            height:100%;
+            }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map;
+        function initMap(){
+        //constructor creates a new map. Only value needed are 1. centre (lng and lat)) of map and zoom level
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat:40.7413549, lng: -73.9980244},
+            zoom: 13
+        });
+        }
+    </script>
+
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYLbmiA6jXb29eeC7-iwG-I2dFEXGn0eM&v=3&callback=initMap"></script>
+</body>
+</html>
