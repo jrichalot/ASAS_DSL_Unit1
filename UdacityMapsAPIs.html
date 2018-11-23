@@ -12,11 +12,32 @@
             padding: 0;
            }
         #map {
+            bottom: 0px;
             height:100%;
+            left:362px;
+            position: absolute;
+            right: 0px;
             }
+
+        .options-box {
+            background: #fff;
+            border: 1px solid #999;
+            border-radius: 3px;
+            height: 100%;
+            line-height: 35px;
+            padding: 10px 10px 30px 10px;
+            text-align: left;
+            width: 340px;
+        }
+
+
     </style>
 </head>
 <body>
+    <div>
+        <input id="show-listings" type="button" value="Show Listings">
+        <input id="hide-listings" type="button" value="Hide Listings">
+    </div>
     <div id="map"></div>
     <script>
         var map;
@@ -25,69 +46,85 @@
         var markers = [];
 
         function initMap(){
-        //constructor creates a new map. Only value needed are 1. centre (lng and lat)) of map and zoom level
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat:40.7413549, lng: -73.9980244},
-            zoom: 13
-        });
-        var locations = [
-            {title: 'Park Avenue Penthouse', location:{lat: 40.7713024,lng:-73.9632393}},
-            {title: 'Chelsea Loft', location:{lat: 40.7444883,lng:-73.9949465}},
-            {title: 'Union Square Open Floor Plan', location:{lat: 40.7347062,lng:-73.9857579}},
-            {title: 'East Village Hip Studio', location:{lat: 40.7281777,lng:-73.984377}},
-            {title: 'TriBeCa Artsy Bachelor Pad', location:{lat: 40.7195264,lng:-74.0089934}},
-            {title: 'Chinatown Home Space', location:{lat: 40.7180628,lng:-73.9961237}}
-            ];
+            
+            //constructor creates a new map. Only value needed are 1. centre (lng and lat)) of map and zoom level
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat:40.7413549, lng: -73.9980244},
+                zoom: 13
+                });
+            
+            var locations = [
+                {title: 'Park Avenue Penthouse', location:{lat: 40.7713024,lng:-73.9632393}},
+                {title: 'Chelsea Loft', location:{lat: 40.7444883,lng:-73.9949465}},
+                {title: 'Union Square Open Floor Plan', location:{lat: 40.7347062,lng:-73.9857579}},
+                {title: 'East Village Hip Studio', location:{lat: 40.7281777,lng:-73.984377}},
+                {title: 'TriBeCa Artsy Bachelor Pad', location:{lat: 40.7195264,lng:-74.0089934}},
+                {title: 'Chinatown Home Space', location:{lat: 40.7180628,lng:-73.9961237}}
+                ];
 
-        var LargeInfowindow = new google.maps.InfoWindow();
-        var bounds = new google.maps.LatLngBounds();
+            var LargeInfowindow = new google.maps.InfoWindow();
+            var bounds = new google.maps.LatLngBounds();
         
-        // loop through the array of markers to create markers upon creating the map
-        for (var i = 0; i < locations.length; i++){
-            // retrieve the position of the marker
-            var position = locations[i].location;
-            // retrieve the name of the place
-            var title = locations[i].title;
-            //create the marker
-            var marker = new google.maps.Marker({
-                map: map,
-                position: position,
-                title: title,
-                animation: google.maps.Animation.DROP,
-                id: i
-                });
+            // loop through the array of markers to create markers upon creating the map
+            for (var i = 0; i < locations.length; i++){
+                // retrieve the position of the marker
+                var position = locations[i].location;
+                // retrieve the name of the place
+                var title = locations[i].title;
+                //create the marker
+                var marker = new google.maps.Marker({
+                    position: position,
+                    title: title,
+                    animation: google.maps.Animation.DROP,
+                    id: i
+                    });
 
-            // push the marker that are created through this loop into "markers", the array created above
-            markers.push(marker);
-            // extend the boundaries of the map if the marker positioned is outside the viewport
-            bounds.extend(marker.position);
+                // push the marker that are created through this loop into "markers", the array created above
+                markers.push(marker);
+                // extend the boundaries of the map if the marker positioned is outside the viewport
+                bounds.extend(marker.position);
 
-            // listen to the onclick event on markers to display the infowindoe for that marker
-            marker.addListener('click', function(){
-                populateInfoWindow(this, LargeInfowindow);
-                });
-            }
+                // listen to the onclick event on markers to display the infowindow for that marker
+                marker.addListener('click', function(){
+                    populateInfoWindow(this, LargeInfowindow);
+                    });
+                }
+            document.getElementById('show-listings').addEventListener('click', showListings);
+            document.getElementById('hide-listings').addEventListener('click', hideListings);
+            
+        }
 
-            // function to populate the infowindow when the marker is clicked 
-            function populateInfoWindow(marker, infowindow){
-                // check the infowindow on this marker is not already open
-                if (infowindow.marker != marker){
-                    infowindow.marker = marker;
-                    infowindow.setContent('<div>' + marker.title + '</div>');
-                    infowindow.open(map, marker);
-                    // clear the marker property is closed if the infowindow is closed
-                    infowindow.addListener('closeclick', function(){
-                        infowindow.setMarker(null);
+        // function to populate the infowindow when the marker is clicked 
+        function populateInfoWindow(marker, infowindow){
+            // check the infowindow on this marker is not already open
+            if (infowindow.marker != marker){
+                infowindow.marker = marker;
+                infowindow.setContent('<div>' + marker.title + '</div>');
+                infowindow.open(map, marker);
+                // clear the marker property is closed if the infowindow is closed
+                infowindow.addListener('closeclick', function(){
+                    infowindow.setMarker(null);
                     });
                 };
             };
-            map.fitBounds(bounds);
-        }
-
-
+        
+            function showListings(){
+                var bounds = new google.maps.LatLngBounds();
+                // extend the boundaries of the map for each marker and display the marker
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].setMap(map);
+                    bounds.extend(markers[i].position);
+                    }
+                    map.fitBounds(bounds);
+                    };
+                
+            function hideListings(){
+                for (var i = 0; i<markers.length; i++){
+                    markers[i].setMap(null);
+                    };    
+                }
     </script>
-
-
+    
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYLbmiA6jXb29eeC7-iwG-I2dFEXGn0eM&v=3&callback=initMap"></script>
 </body>
 </html>
