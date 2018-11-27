@@ -28,6 +28,12 @@
       #show-listings {
         width: 48%;
       }
+      hr {
+        background: #D0D7D9;
+        height: 1px;
+        margin: 20px 0 20px 0;
+        border: none;
+      }
       #map {
         bottom:0px;
         height: 100%;
@@ -45,8 +51,19 @@
         text-align: left;
         width: 340px;
       }
-
-
+      #pano {
+        width: 200px;
+        height: 200px;
+      }
+      .text {
+        font-size: 12px;
+      }
+      #toggle-drawing {
+        width: 27%;
+        position: relative;
+        margin-left: 10px;
+      }
+    
     </style>
 </head>
 <body>
@@ -54,8 +71,11 @@
       <div class="options-box">
         <h1>Find Your Way on the All Saints Anglican School Campus</h1>
         <div>
-          <input id="show-listings" type="button" value="Show Listings">
-          <input id="hide-listings" type="button" value="Hide Listings">
+            <input id="show-listings" type="button" value="Show Listings">
+            <input id="hide-listings" type="button" value="Hide Listings">
+            <hr>
+            <span class="text">Draw a shape to search within it for school buildings</span>
+            <input id="toggle-drawing" type="button" value="Drawing Tools">            
         </div>
       </div>
       <div id="map"></div>
@@ -66,6 +86,9 @@
 
         // create an array of markers
         var markers = [];
+        
+        // global variable to capture the coordinate points of a polygon when drawn on a map
+        var polygon = null;
 
         function initMap(){
             
@@ -75,6 +98,18 @@
                 zoom: 18
                 });
             
+            var drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.POLYGON,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_LEFT,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYGON
+                        ]
+                    }
+                });
+                
+            // locations commented out provide a better display on the Satelite view (which is at   an angle)
             var locations = [
                 {title: 'Nairn Theatre', location:{lat:-28.060662, lng:153.361772}},
                 <!--{title: 'Nairn Theatre', location:{lat:-28.060529, lng:153.361819}},-->
@@ -141,7 +176,36 @@
             document.getElementById('show-listings').addEventListener('click', showListings);
             document.getElementById('hide-listings').addEventListener('click', hideListings);
             
-        }
+            document.getElementById('toggle-drawing').addEventListener('click',function(){
+                toggleDrawing(drawingManager);;
+            });
+            
+            // add an event listener to capture the coordinate points of a polygon when a polygon // is drawn and call the searchWithinPolygon function. theis will show the buildings
+            // within that polygon only and hide any outside the polygon
+            drawingManager.addListener('overlaycomplete',function(event){
+                //first check if there is already an existing polygon
+                //if there is remove it and remove the markers
+                //this limits the user to one polygon at a time
+                if (polygon){
+                    polygon.setMap(null);
+                    hideListings();
+                    }
+                //switch the drawing mode off i.e. to the hand
+                drawingManager.setDrawingMode(null);
+                //capture the overlay and assign it to polygon
+                polygon = event.overlay;
+                polygon.setEditable(true);
+                //call the searchWIthinPolygon function
+                searchWithinPolygon();
+                //add event listeners on the polygon itself if the polygon is changed
+                //so that the markers are updated
+                //see above, polygon is editable
+                polygon.getPath().addListener('set_at',searchWithinPolygon);
+                polygon.getPath().addListener('insert_at', searchWithinPolygon);
+                
+            });
+            
+            }
 
         // function to populate the infowindow when the marker is clicked 
         function populateInfoWindow(marker, infowindow){
@@ -157,7 +221,7 @@
                 };
             };
         
-            function showListings(){
+        function showListings(){
                 var bounds = new google.maps.LatLngBounds();
                 // extend the boundaries of the map for each marker and display the marker
                 for (var i = 0; i < markers.length; i++) {
@@ -167,13 +231,36 @@
                     map.fitBounds(bounds);
                     };
                 
-            function hideListings(){
+        function hideListings(){
                 for (var i = 0; i<markers.length; i++){
                     markers[i].setMap(null);
                     };    
+                };
+        
+        function toggleDrawing(drawingManager){
+            if (drawingManager.map){
+                drawingManager.setMap(null);
+                // if the user drew anything, get rid of it
+                if (polygon !== null) {
+                    polygon.setMap(null);
                 }
+            } else {
+                drawingManager.setMap(map);
+            }
+        };
+        
+        function searchWithinPolygon(){
+            for (var i = 0; i < markers.length; i++){
+                if (google.maps.geometry.poly.containsLocation(markers[i].position, polygon)){
+                    markers[i].setMap(map);
+                } else {
+                    markers[i].setMap(null);
+                }
+            }
+        }
+        
     </script>
     
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYLbmiA6jXb29eeC7-iwG-I2dFEXGn0eM&v=3&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry&key=AIzaSyDYLbmiA6jXb29eeC7-iwG-I2dFEXGn0eM&v=3&callback=initMap"></script>
 </body>
 </html>
